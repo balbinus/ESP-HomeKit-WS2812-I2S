@@ -1,0 +1,3 @@
+[submodule "esp-homekit-demo"]
+	path = esp-homekit-demo
+	url = git@github.com:maximkulkin/esp-homekit-demo.git
