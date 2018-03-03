@@ -4,3 +4,6 @@
 [submodule "esp-open-rtos"]
 	path = esp-open-rtos
 	url = git@github.com:SuperHouse/esp-open-rtos.git
+[submodule "esp-open-sdk"]
+	path = esp-open-sdk
+	url = git@github.com:pfalcon/esp-open-sdk.git
