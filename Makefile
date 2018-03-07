@@ -6,8 +6,9 @@ all: base par64
 base: esp-open-sdk
 
 esp-open-sdk:
-	cd $@ && make toolchain esptool libhal
 	# Not using STANDALONE=n since it doesn't build with it...
+	# AAAAND for some reason make -C doesn't work?!
+	cd $@ && make toolchain esptool libhal
 
 par64:
 	$(MAKE) -C $@ clean all
