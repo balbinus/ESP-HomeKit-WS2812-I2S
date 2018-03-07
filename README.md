@@ -10,9 +10,9 @@ Started as a documentation of my build of ESP-HomeKit to control WS2812 LEDs via
 
 ## How to build individual projects
 
-To clean up (the Makefile isn't very good at picking up changes): `make -C <directory> clean`
-To build: `make -C <directory> all`
-To flash the ESP8266: `make -C <directory> flash`
-To flash and connect through serial: `make -C <directory> test`
+- To clean up (the Makefile isn't very good at picking up changes): `make -C <directory> clean`
+- To build: `make -C <directory> all`
+- To flash the ESP8266: `make -C <directory> flash`
+- To flash and connect through serial: `make -C <directory> test`
 
 `test` depends on `all` + `flash` + `monitor`.
