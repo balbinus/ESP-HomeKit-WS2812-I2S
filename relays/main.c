@@ -31,43 +31,9 @@ homekit_characteristic_t saturation = HOMEKIT_CHARACTERISTIC_(SATURATION, 0);
 #include "blinkm.h"
 #endif
 
-#ifndef ONBOARD_LED_GPIO
-#define ONBOARD_LED_GPIO 2
-#endif
+#include "onboard_led.h"
 
 #define ACCESSORY_NAME "BLBNS ESP8266 HomeKit"
-
-void onboard_led_init()
-{
-    gpio_enable(ONBOARD_LED_GPIO, GPIO_OUTPUT);
-    gpio_write(ONBOARD_LED_GPIO, 1);
-}
-
-void accessory_identify_task(void *_args)
-{
-    // Do NOT attempt that on the relays. Waaaay too fast. For them or their loads.
-    for (int i=0; i<3; i++)
-    {
-        for (int j=0; j<2; j++)
-        {
-            gpio_write(ONBOARD_LED_GPIO, 0);
-            vTaskDelay(100 / portTICK_PERIOD_MS);
-            gpio_write(ONBOARD_LED_GPIO, 1);
-            vTaskDelay(100 / portTICK_PERIOD_MS);
-        }
-
-        vTaskDelay(250 / portTICK_PERIOD_MS);
-    }
-
-    gpio_write(ONBOARD_LED_GPIO, 1);
-    vTaskDelete(NULL);
-}
-
-void accessory_identify(homekit_value_t _value)
-{
-    printf("Accessory identify\n");
-    xTaskCreate(accessory_identify_task, "Accessory identify", 128, NULL, 2, NULL);
-}
 
 homekit_characteristic_t name = HOMEKIT_CHARACTERISTIC_(NAME, ACCESSORY_NAME);
 homekit_accessory_t *accessories[] = {
