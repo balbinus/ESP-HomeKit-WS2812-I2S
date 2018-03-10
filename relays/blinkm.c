@@ -103,11 +103,14 @@ void blinkm_update(blinkm_t *bkm)
         data[1] = bkm->hue;
         data[2] = bkm->saturation;
         data[3] = round(255 * (bkm->brightness/100.0f));
+        
+        printf(">> Setting %u to: ON=%u, H=%.1f/%u, S=%.1f/%u, B=%.1f/%u\n",
+               bkm->address, bkm->on,
+               bkm->hue, data[1],
+               bkm->saturation, data[2],
+               bkm->brightness, data[3]);
     }
     
-    printf(">> Setting %u to: ON=%u, H=%.1f/%u, S=%.1f/%u, B=%.1f/%u\n",
-           bkm->address, bkm->on, bkm->hue, data[1], bkm->saturation, data[2],
-           bkm->brightness, data[3]);
     int err = i2c_slave_write(BLINKM_BUS, bkm->address, NULL, data, 4);
     if (err != 0)
     {
