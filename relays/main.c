@@ -22,23 +22,14 @@
 homekit_characteristic_t brightness = HOMEKIT_CHARACTERISTIC_(BRIGHTNESS, 100);
 homekit_characteristic_t hue = HOMEKIT_CHARACTERISTIC_(HUE, 0);
 homekit_characteristic_t saturation = HOMEKIT_CHARACTERISTIC_(SATURATION, 0);
-
-// there can only be one, since we do it through I2S
-#define NUM_WS2812 1
-#else
-#define NUM_WS2812 0
 #endif
 
 #ifdef RELAYS
 #include "relays.h"
-#else
-#define NUM_RELAYS 0
 #endif
 
 #ifdef BLINKM
 #include "blinkm.h"
-#else
-#define NUM_BLINKM 0
 #endif
 
 #ifndef ONBOARD_LED_GPIO
@@ -93,13 +84,13 @@ homekit_accessory_t *accessories[] = {
         }),
 #ifdef RELAYS
 #if NUM_RELAYS > 0
-    DEFINE_RELAY_SERVICE(0),
+        DEFINE_RELAY_SERVICE(0),
 #if NUM_RELAYS > 1
-    DEFINE_RELAY_SERVICE(1),
+        DEFINE_RELAY_SERVICE(1),
 #if NUM_RELAYS > 2
-    DEFINE_RELAY_SERVICE(2),
+        DEFINE_RELAY_SERVICE(2),
 #if NUM_RELAYS > 3
-    DEFINE_RELAY_SERVICE(3),
+        DEFINE_RELAY_SERVICE(3),
 #endif /* > 3 */
 #endif /* > 2 */
 #endif /* > 1 */

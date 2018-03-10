@@ -4,61 +4,44 @@
 
 #include "relays.h"
 
-const int relay_gpio[NUM_RELAYS] = {12, 16};
-bool relay_on[NUM_RELAYS] = {false, false};
+#define MAX_RELAYS 4
+#if NUM_RELAYS > MAX_RELAYS
+#error You want more than 4 relays? Cool, then go define some pins in relays.c.
+#endif
+const int relay_gpio[MAX_RELAYS] = {12, 16, 13, 14};
 
-
-void relay_write(uint8_t idx, bool on)
+void relay_write(relay_t *rl)
 {
-    gpio_write(relay_gpio[idx], on ? 1 : 0);
+    gpio_write(rl->pin, rl->on ? 1 : 0);
+}
+
+void relay_init_one(relay_t *rl, uint8_t pin)
+{
+    rl->pin = pin;
+    rl->on = false;
+    
+    gpio_enable(rl->pin, GPIO_OUTPUT);
+    relay_write(rl);
 }
 
 void relay_init()
 {
     for (uint8_t i = 0 ; i < NUM_RELAYS ; i++)
     {
-        gpio_enable(relay_gpio[i], GPIO_OUTPUT);
-        relay_write(i, relay_on[i]);
+        relay_init_one(&relays[i], relay_gpio[i]);
     }
 }
 
-homekit_value_t relay_on_get(uint8_t idx)
+void relay_on_cb(homekit_characteristic_t *ch, homekit_value_t value, void *context)
 {
-    if (idx >= NUM_RELAYS)
-    {
-        printf("Invalid relay index: %u\n", idx);
-        return HOMEKIT_BOOL(false);
-    }
+    relay_t *rl = (relay_t *) context;
     
-    return HOMEKIT_BOOL(relay_on[idx]);
-}
-
-void relay_on_set(uint8_t idx, homekit_value_t value)
-{
     if (value.format != homekit_format_bool)
     {
         printf("Invalid value format: %d\n", value.format);
         return;
     }
-    if (idx >= NUM_RELAYS)
-    {
-        printf("Invalid relay index: %u\n", idx);
-        return;
-    }
-
-    relay_on[idx] = value.bool_value;
-    relay_write(idx, relay_on[idx]);
+    
+    rl->on = value.bool_value;
+    relay_write(rl);
 }
-
-#if NUM_RELAYS > 0
-    IMPLEMENT_CALLBACKS_RELAY(0)
-#if NUM_RELAYS > 1
-    IMPLEMENT_CALLBACKS_RELAY(1)
-#if NUM_RELAYS > 2
-    IMPLEMENT_CALLBACKS_RELAY(2)
-#if NUM_RELAYS > 3
-    IMPLEMENT_CALLBACKS_RELAY(3)
-#endif /* > 3 */
-#endif /* > 2 */
-#endif /* > 1 */
-#endif /* > 0 */
