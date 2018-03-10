@@ -7,12 +7,11 @@
 #include <esp8266.h>
 #include <FreeRTOS.h>
 #include <task.h>
+#include <wifi_config.h>
 
 #include <homekit/homekit.h>
 #include <homekit/types.h>
 #include <homekit/characteristics.h>
-
-#include <wifi_config.h>
 
 #define HOMEKIT_CHARACTERISTIC_CALLBACK_CONTEXT(f, c) &(homekit_characteristic_change_callback_t) { .function = f, .context = c }
 
