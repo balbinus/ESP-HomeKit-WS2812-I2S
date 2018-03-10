@@ -72,6 +72,7 @@ void accessory_identify(homekit_value_t _value)
 
 homekit_characteristic_t name = HOMEKIT_CHARACTERISTIC_(NAME, ACCESSORY_NAME);
 homekit_accessory_t *accessories[] = {
+#if defined(WS2812) || defined(BLINKM)
     HOMEKIT_ACCESSORY(.id=1, .category=homekit_accessory_category_lightbulb, .services=(homekit_service_t*[]){
         HOMEKIT_SERVICE(ACCESSORY_INFORMATION, .characteristics=(homekit_characteristic_t*[]){
             &name,
@@ -82,20 +83,6 @@ homekit_accessory_t *accessories[] = {
             HOMEKIT_CHARACTERISTIC(IDENTIFY, accessory_identify),
             NULL
         }),
-#ifdef RELAYS
-#if NUM_RELAYS > 0
-        DEFINE_RELAY_SERVICE(0),
-#if NUM_RELAYS > 1
-        DEFINE_RELAY_SERVICE(1),
-#if NUM_RELAYS > 2
-        DEFINE_RELAY_SERVICE(2),
-#if NUM_RELAYS > 3
-        DEFINE_RELAY_SERVICE(3),
-#endif /* > 3 */
-#endif /* > 2 */
-#endif /* > 1 */
-#endif /* > 0 */
-#endif /* RELAYS */
 #ifdef WS2812
         HOMEKIT_SERVICE(LIGHTBULB, .primary=false, .characteristics=(homekit_characteristic_t*[]){
             HOMEKIT_CHARACTERISTIC(NAME, "WS2812"),
@@ -126,6 +113,33 @@ homekit_accessory_t *accessories[] = {
 #endif /* BLINKM */
         NULL
     }),
+#endif /* defined(WS2812) or defined(BLINKM) */
+#ifdef RELAYS
+    HOMEKIT_ACCESSORY(.id=2, .category=homekit_accessory_category_switch, .services=(homekit_service_t*[]){
+        HOMEKIT_SERVICE(ACCESSORY_INFORMATION, .characteristics=(homekit_characteristic_t*[]){
+            &name,
+            HOMEKIT_CHARACTERISTIC(MANUFACTURER, "balbinus"),
+            HOMEKIT_CHARACTERISTIC(SERIAL_NUMBER, "F61F7B271F90"), // FIXME FIXME
+            HOMEKIT_CHARACTERISTIC(MODEL, ACCESSORY_NAME),
+            HOMEKIT_CHARACTERISTIC(FIRMWARE_REVISION, "1.0"),
+            HOMEKIT_CHARACTERISTIC(IDENTIFY, accessory_identify),
+            NULL
+        }),
+#if NUM_RELAYS > 0
+        DEFINE_RELAY_SERVICE(0),
+#if NUM_RELAYS > 1
+        DEFINE_RELAY_SERVICE(1),
+#if NUM_RELAYS > 2
+        DEFINE_RELAY_SERVICE(2),
+#if NUM_RELAYS > 3
+        DEFINE_RELAY_SERVICE(3),
+#endif /* > 3 */
+#endif /* > 2 */
+#endif /* > 1 */
+#endif /* > 0 */
+        NULL,
+    }),
+#endif /* RELAYS */
     NULL
 };
 
@@ -174,3 +188,4 @@ void user_init(void)
     blinkm_init();
 #endif
 }
+

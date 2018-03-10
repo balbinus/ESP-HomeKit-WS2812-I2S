@@ -18,7 +18,7 @@ void relay_init();
 void relay_on_cb(homekit_characteristic_t *ch, homekit_value_t value, void *context);
 
 #define DEFINE_RELAY_SERVICE(idx) \
-        HOMEKIT_SERVICE(LIGHTBULB, .primary=false, .characteristics=(homekit_characteristic_t*[]){ \
+        HOMEKIT_SERVICE(SWITCH, .primary=false, .characteristics=(homekit_characteristic_t*[]){ \
             HOMEKIT_CHARACTERISTIC(NAME, "Relay #" #idx), \
             HOMEKIT_CHARACTERISTIC( \
                 ON, false, \
