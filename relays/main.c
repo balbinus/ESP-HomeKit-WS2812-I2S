@@ -17,6 +17,8 @@
 #ifdef WS2812
 #include "ws2812.h"
 
+#define HOMEKIT_CHARACTERISTIC_CALLBACK_CONTEXT(f, c) &(homekit_characteristic_change_callback_t) { .function = f, .context = c }
+
 homekit_characteristic_t brightness = HOMEKIT_CHARACTERISTIC_(BRIGHTNESS, 100);
 homekit_characteristic_t hue = HOMEKIT_CHARACTERISTIC_(HUE, 0);
 homekit_characteristic_t saturation = HOMEKIT_CHARACTERISTIC_(SATURATION, 0);
@@ -33,7 +35,9 @@ homekit_characteristic_t saturation = HOMEKIT_CHARACTERISTIC_(SATURATION, 0);
 #define NUM_RELAYS 0
 #endif
 
-#ifndef NUM_BLINKM
+#ifdef BLINKM
+#include "blinkm.h"
+#else
 #define NUM_BLINKM 0
 #endif
 
@@ -76,9 +80,6 @@ void accessory_identify(homekit_value_t _value)
 }
 
 homekit_characteristic_t name = HOMEKIT_CHARACTERISTIC_(NAME, ACCESSORY_NAME);
-
-#define NUM_SERVICES (1 /* ACCESSORY_INFORMATION */ + /*NUM_RELAYS + NUM_WS2812 + NUM_BLINKM +*/ 1 /* terminating NULL */)
-homekit_service_t *services[NUM_SERVICES];
 homekit_accessory_t *accessories[] = {
     HOMEKIT_ACCESSORY(.id=1, .category=homekit_accessory_category_lightbulb, .services=(homekit_service_t*[]){
         HOMEKIT_SERVICE(ACCESSORY_INFORMATION, .characteristics=(homekit_characteristic_t*[]){
@@ -118,6 +119,20 @@ homekit_accessory_t *accessories[] = {
             NULL
         }),
 #endif
+#ifdef BLINKM
+#if NUM_BLINKM > 0
+        DEFINE_BLINKM_SERVICE(0),
+#if NUM_BLINKM > 1
+        DEFINE_BLINKM_SERVICE(1),
+#if NUM_BLINKM > 2
+        DEFINE_BLINKM_SERVICE(2),
+#if NUM_BLINKM > 3
+        DEFINE_BLINKM_SERVICE(3),
+#endif /* > 3 */
+#endif /* > 2 */
+#endif /* > 1 */
+#endif /* > 0 */
+#endif /* BLINKM */
         NULL
     }),
     NULL
@@ -163,5 +178,8 @@ void user_init(void)
 #ifdef WS2812
     par64_init();
     par64_start();
+#endif
+#ifdef BLINKM
+    blinkm_init();
 #endif
 }

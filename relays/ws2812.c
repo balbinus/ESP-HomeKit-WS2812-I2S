@@ -11,7 +11,8 @@
 #include "ws2812.h"
 
 //http://blog.saikoled.com/post/44677718712/how-to-convert-from-hsi-to-rgb-white
-static void hsi2rgbw(float h, float s, float i, uint8_t* rgbw) {
+static void hsi2rgbw(float h, float s, float i, uint8_t* rgbw)
+{
     uint8_t r, g, b, w;
     float cos_h, cos_1047_h;
     //h = fmod(h,360); // cycle h around to 0-360 degrees
