@@ -1,3 +1,5 @@
+#ifdef WS2812
+
 #include <stdio.h>
 #include <string.h>
 #include <math.h>  //requires LIBS ?= hal m to be added to Makefile
@@ -124,3 +126,5 @@ void par64_on_set(homekit_value_t value)
     }
     par64_on = value.bool_value;
 }
+
+#endif /* WS2812 */
