@@ -14,10 +14,10 @@
 
 #include <wifi_config.h>
 
+#define HOMEKIT_CHARACTERISTIC_CALLBACK_CONTEXT(f, c) &(homekit_characteristic_change_callback_t) { .function = f, .context = c }
+
 #ifdef WS2812
 #include "ws2812.h"
-
-#define HOMEKIT_CHARACTERISTIC_CALLBACK_CONTEXT(f, c) &(homekit_characteristic_change_callback_t) { .function = f, .context = c }
 
 homekit_characteristic_t brightness = HOMEKIT_CHARACTERISTIC_(BRIGHTNESS, 100);
 homekit_characteristic_t hue = HOMEKIT_CHARACTERISTIC_(HUE, 0);
