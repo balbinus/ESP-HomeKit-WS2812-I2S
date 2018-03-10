@@ -8,7 +8,7 @@
 #if NUM_RELAYS > MAX_RELAYS
 #error You want more than 4 relays? Cool, then go define some pins in relays.c.
 #endif
-const int relay_gpio[MAX_RELAYS] = {12, 16, 13, 14};
+const int relay_gpio[MAX_RELAYS] = {13, 12, 14, 16};
 
 void relay_write(relay_t *rl)
 {
